@@ -13,6 +13,12 @@ const {
   getAuthenticatedDoctor,
 } = require("./controllers/doctor.controller.js");
 
+const {
+  loginPatient,
+  getAuthenticatedPatient,
+  addPatient,
+} = require("./controllers/patient.controller.js");
+
 const app = express();
 app.use(cors());
 // app.use(cors({
@@ -36,9 +42,16 @@ mongoose
 
 app.get("/get-doctor", getAllDoctors);
 app.post("/doctor", getDoctor);
-app.post("/auth-doctor", getAuthenticatedDoctor);
-app.post("/create-doctor", addDoctor);
+
 app.post("/login-doctor", loginDoctor);
+app.post("/create-doctor", addDoctor);
+app.post("/auth-doctor", getAuthenticatedDoctor);
+
+// ---
+
+app.post("/login-patient", loginPatient);
+app.post("/create-patient", addPatient);
+app.post("/auth-patient", getAuthenticatedPatient);
 
 app.listen(PORT, () => {
   console.log(`Server is Running on http://localhost:${PORT}`);
