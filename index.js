@@ -18,6 +18,7 @@ const {
   getAuthenticatedPatient,
   addPatient,
 } = require("./controllers/patient.controller.js");
+const { addAppointment, getAppointmentsPatient, getAppointmentsDoctor } = require("./controllers/appointment.controller.js");
 
 const app = express();
 app.use(cors());
@@ -52,6 +53,10 @@ app.post("/auth-doctor", getAuthenticatedDoctor);
 app.post("/login-patient", loginPatient);
 app.post("/create-patient", addPatient);
 app.post("/auth-patient", getAuthenticatedPatient);
+
+app.post("/create-appointment", addAppointment);
+app.post("/get-appointments-patient", getAppointmentsPatient);
+app.post("/get-appointments-doctor", getAppointmentsDoctor);
 
 app.listen(PORT, () => {
   console.log(`Server is Running on http://localhost:${PORT}`);
