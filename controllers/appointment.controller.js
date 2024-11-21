@@ -1,4 +1,6 @@
 const Appointment = require("../models/appointment.model.js");
+const Doctor = require("../models/doctor.model.js");
+const Patient = require("../models/patient.model.js");
 
 module.exports.addAppointment = async (req, res) => {
   try {
@@ -36,10 +38,23 @@ module.exports.getAppointmentsDoctor = async (req, res) => {
 
     const data = await Appointment.find({ doctorId });
 
+    const data1 = await Promise.all(
+      data.map(async (p) => {
+        const patient = await Patient.findOne({ _id: p.patientId });
+
+        const app = p.toObject();
+        app.patientName = patient.name;
+        delete app.doctorId;
+        delete app.patientId;
+
+        return app;
+      })
+    );
+
     res.json({
       message: "Data Loaded SuccessFully!",
       status: true,
-      data,
+      data: data1,
     });
   } catch (err) {
     console.log("Error ", err);
@@ -50,16 +65,30 @@ module.exports.getAppointmentsDoctor = async (req, res) => {
     });
   }
 };
+
 module.exports.getAppointmentsPatient = async (req, res) => {
   try {
     const { patientId } = req.body;
 
     const data = await Appointment.find({ patientId });
 
+    const data1 = await Promise.all(
+      data.map(async (d) => {
+        const doctor = await Doctor.findOne({ _id: d.doctorId });
+
+        const app = d.toObject();
+        app.doctorName = doctor.name;
+        delete app.doctorId;
+        delete app.patientId;
+
+        return app;
+      })
+    );
+
     res.json({
       message: "Data Loaded SuccessFully!",
       status: true,
-      data,
+      data: data1,
     });
   } catch (err) {
     console.log("Error ", err);
@@ -156,6 +185,37 @@ module.exports.getAuthenticatedPatient = async (req, res) => {
 
     res.json({
       message: "Data Loaded Successfully!",
+      status: true,
+      data: patientData,
+    });
+  } catch (error) {
+    res.json({
+      message: "Server Error",
+      status: false,
+      error: error.message,
+    });
+  }
+};
+
+module.exports.updateStatus = async (req, res) => {
+  try {
+    const { id, status } = req.body;
+
+    const data = await Appointment.findOneAndUpdate({ _id: id }, { status });
+
+    if (!data) {
+      return res.json({
+        message: "Something Went Wrong",
+        status: false,
+      });
+    }
+
+    const patientData = data.toObject();
+
+    delete patientData.password;
+
+    res.json({
+      message: "Status Updated",
       status: true,
       data: patientData,
     });
