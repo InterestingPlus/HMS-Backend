@@ -46,13 +46,40 @@ module.exports.addDoctor = async (req, res) => {
 };
 
 module.exports.getAllDoctors = async (req, res) => {
-  const data = await Doctor.find();
+  try {
+    const data = await Doctor.find();
 
-  res.json({
-    message: "Data Loaded SuccessFully!",
-    status: true,
-    data,
-  });
+    res.json({
+      message: "Doctors Loaded Successfully!",
+      status: true,
+      data,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "An error occurred while fetching doctors.",
+      status: false,
+      error: error.message,
+    });
+  }
+};
+
+module.exports.TopDoctors = async (req, res) => {
+  try {
+    // const data = await Doctor.find().sort({ rating: -1 }).limit(10);
+    const data = await Doctor.find().limit(6);
+
+    res.json({
+      message: "Top Doctors Loaded Successfully!",
+      status: true,
+      data,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "An error occurred while fetching doctors.",
+      status: false,
+      error: error.message,
+    });
+  }
 };
 
 module.exports.getDoctor = async (req, res) => {

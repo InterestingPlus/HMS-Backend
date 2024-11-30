@@ -11,6 +11,7 @@ const {
   addDoctor,
   loginDoctor,
   getAuthenticatedDoctor,
+  TopDoctors,
 } = require("./controllers/doctor.controller.js");
 
 const {
@@ -27,9 +28,20 @@ const {
 
 const app = express();
 app.use(cors());
-// app.use(cors({
-//   origin: "http://127.0.0.1:5500"
-// }));
+// app.use(
+//   cors({
+//     // origin: "http://127.0.0.1:5500",
+//     origin: "*",
+//     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+//   })
+// );
+
+// const corsOptions = {
+//   origin: "*",
+//   credentials: false,
+// };
+
+// app.use(cors(corsOptions));
 
 app.use(express.json());
 
@@ -46,7 +58,11 @@ mongoose
     console.error("Error connecting to MongoDB : ", error);
   });
 
+app.get("/", (req, res) => {
+  res.send("Hospital Management System Backend!");
+});
 app.get("/get-doctor", getAllDoctors);
+app.get("/top-doctor", TopDoctors);
 app.post("/doctor", getDoctor);
 
 app.post("/login-doctor", loginDoctor);
