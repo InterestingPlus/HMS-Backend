@@ -66,12 +66,16 @@ module.exports.getAllDoctors = async (req, res) => {
 module.exports.TopDoctors = async (req, res) => {
   try {
     // const data = await Doctor.find().sort({ rating: -1 }).limit(10);
-    const data = await Doctor.find().limit(6);
+    const data = await Doctor.find().limit(6).lean();
+
+    data.forEach((doctor) => {
+      delete doctor.password;
+    });
 
     res.json({
       message: "Top Doctors Loaded Successfully!",
       status: true,
-      data,
+      data: data,
     });
   } catch (error) {
     res.status(500).json({

@@ -12,3 +12,10 @@ const patientSchema = mongoose.Schema({
 const Patient = mongoose.model("Patient", patientSchema);
 
 module.exports = Patient;
+
+
+// Address
+// History
+// Blood Group / Pressure
+// Medical History
+// Insurance

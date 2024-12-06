@@ -24,6 +24,7 @@ const {
   getAppointmentsPatient,
   getAppointmentsDoctor,
   updateStatus,
+  checkBookedAppointments,
 } = require("./controllers/appointment.controller.js");
 
 const app = express();
@@ -79,6 +80,8 @@ app.post("/create-appointment", addAppointment);
 app.post("/get-appointments-patient", getAppointmentsPatient);
 app.post("/get-appointments-doctor", getAppointmentsDoctor);
 app.post("/update-status", updateStatus);
+
+app.post("/check-booked-appointments", checkBookedAppointments);
 
 app.listen(PORT, () => {
   console.log(`Server is Running on http://localhost:${PORT}`);

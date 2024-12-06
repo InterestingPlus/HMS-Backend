@@ -11,7 +11,6 @@ module.exports.addPatient = async (req, res) => {
       age,
       contact,
     });
- 
 
     console.log(
       `Patient Created = Name : ${result.name} UserName : ${result.username}`
