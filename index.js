@@ -27,6 +27,8 @@ const {
   checkBookedAppointments,
 } = require("./controllers/appointment.controller.js");
 
+const { otpVerification } = require("./controllers/email.controller.js");
+
 const app = express();
 app.use(cors());
 // app.use(
@@ -82,6 +84,8 @@ app.post("/get-appointments-doctor", getAppointmentsDoctor);
 app.post("/update-status", updateStatus);
 
 app.post("/check-booked-appointments", checkBookedAppointments);
+
+app.post("/otp-verification", otpVerification);
 
 app.listen(PORT, () => {
   console.log(`Server is Running on http://localhost:${PORT}`);
