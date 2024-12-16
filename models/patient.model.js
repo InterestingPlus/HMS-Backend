@@ -7,12 +7,12 @@ const patientSchema = mongoose.Schema({
   name: String,
   age: Number,
   contact: Number,
+  profileImg: String,
 });
 
 const Patient = mongoose.model("Patient", patientSchema);
 
 module.exports = Patient;
-
 
 // Address
 // History

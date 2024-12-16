@@ -2,7 +2,7 @@ const Patient = require("../models/patient.model.js");
 
 module.exports.addPatient = async (req, res) => {
   try {
-    const { username, password, name, age, contact } = req.body;
+    const { username, password, name, age, contact, profileImg } = req.body;
 
     const result = await Patient.create({
       username,
@@ -10,6 +10,7 @@ module.exports.addPatient = async (req, res) => {
       name,
       age,
       contact,
+      profileImg,
     });
 
     console.log(
