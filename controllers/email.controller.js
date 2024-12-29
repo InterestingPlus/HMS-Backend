@@ -24,6 +24,8 @@ module.exports.otpVerification = async (req, res) => {
     // Generate a 6-digit OTP
     const otp = Math.floor(100000 + Math.random() * 900000);
 
+    console.log(otp);
+
     // Send email
     const info = await transporter.sendMail({
       from: `"MediConnect" <${process.env.EMAIL_USER}>`,

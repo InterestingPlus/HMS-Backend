@@ -1,0 +1,39 @@
+curl "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=GEMINI_API_KEY" \
+-H 'Content-Type: application/json' \
+-X POST \
+-d '{
+  "contents": [{
+    "parts":[{"text": "Explain how AI works"}]
+    }]
+   }'
+
+
+API Key = AIzaSyChXnSrzF3PEMPvn3XReYlRWxqV24Q7vt4
+
+
+        "promptTokenCount": 10,
+        "candidatesTokenCount": 72,
+        "totalTokenCount": 82
+
+        "promptTokenCount": 25,
+        "candidatesTokenCount": 252,
+        "totalTokenCount": 277
+
+
+        [\n  \"Drink plenty of fluids: Water, clear broths, and electrolyte drinks help prevent dehydration.\",\n  \"Rest is crucial: Get plenty of sleep to aid your body's recovery.\",\n  \"Eat easily digestible foods: Opt for bland, soft foods like toast, crackers, rice, and bananas. Avoid greasy or spicy foods.\",\n  \"Consider chicken soup: It's a classic remedy that can soothe a sore throat and provide nutrients.\",\n  \"Avoid caffeine and alcohol: These can dehydrate you further.\",\n  \"Eat small, frequent meals: This can prevent stomach upset.\",\n  \"Increase your vitamin C intake:  Fruits like oranges and berries, or supplements (consult your doctor first).\",\n  \"Try popsicles or ice chips: These can help soothe a sore throat and reduce fever.\",\n  \"Avoid dairy if you have mucus buildup: Dairy can sometimes worsen congestion.\",\n  \"Listen to your body: If something doesn't sit well, don't eat it.\",\n  \"Consult a doctor if your fever persists or worsens:  This is especially important for high fevers or those accompanied by other symptoms.\"\n]
+
+
+Drink plenty of fluids: Water, clear broths, and electrolyte drinks help prevent dehydration.
+Rest is crucial: Get plenty of sleep to aid your body's recovery.
+Eat easily digestible foods: Opt for bland, soft foods like toast, crackers, rice, and bananas. Avoid greasy or spicy foods.
+Consider chicken soup: It's a classic remedy that can soothe a sore throat and provide nutrients.
+Avoid caffeine and alcohol: These can dehydrate you further.
+Eat small, frequent meals: This can prevent stomach upset.
+Increase your vitamin C intake: Include fruits like oranges and berries, or take supplements (consult your doctor first).
+Try popsicles or ice chips: These can help soothe a sore throat and reduce fever.
+Avoid dairy if you have mucus buildup: Dairy can sometimes worsen congestion.
+Listen to your body: If something doesn't sit well, don't eat it.
+Consult a doctor if your fever persists or worsens: This is especially important for high fevers or those accompanied by other symptoms.
+
+
+"```javascript\nconst feverDietSuggestions = [\n  {\n    suggestion: \"Drink plenty of fluids.\",\n    details: \"Water, clear broths, and electrolyte drinks help prevent dehydration, which is common with fever.\",\n    priority: \"high\"\n  },\n  {\n    suggestion: \"Rest is crucial.\",\n    details: \"Your body needs energy to fight the infection. Avoid strenuous activities and get ample sleep.\",\n    priority: \"high\"\n  },\n  {\n    suggestion: \"Eat easily digestible foods.\",\n    details: \"Opt for bland, soft foods like toast, crackers, rice, and bananas. Avoid heavy, greasy, or spicy foods.\",\n    priority: \"medium\"\n  },\n  {\n    suggestion: \"Consider a balanced diet.\",\n    details: \"Once your appetite improves, incorporate fruits, vegetables, lean protein, and whole grains for essential nutrients.\",\n    priority: \"medium\"\n  },\n  {\n    suggestion: \"Avoid alcohol and caffeine.\",\n    details: \"These can dehydrate you further and interfere with medication.\",\n    priority: \"medium\"\n  },\n  {\n    suggestion: \"Consume foods rich in Vitamin C.\",\n    details: \"Citrus fruits, berries, and leafy greens may support your immune system.\",\n    priority: \"low\"\n  },\n  {\n    suggestion: \"Zinc-rich foods may help.\",\n    details: \"Oysters, nuts, seeds, and legumes contain zinc, which plays a role in immune function.\",\n    priority: \"low\"\n  },\n  {\n    suggestion: \"Listen to your body.\",\n    details: \"If something upsets your stomach, avoid it. Eat small, frequent meals if you have a decreased appetite.\",\n    priority: \"high\"\n  },\n  {\n    suggestion: \"Consult a doctor or dietitian.\",\n    details: \"They can provide personalized dietary advice based on your specific needs and health condition.\",\n    priority: \"high\"\n  }\n];\n```\n"

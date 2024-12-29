@@ -1,6 +1,7 @@
 const Appointment = require("../models/appointment.model.js");
 const Doctor = require("../models/doctor.model.js");
 const Patient = require("../models/patient.model.js");
+const Notification = require("../models/notification.model.js");
 
 module.exports.addAppointment = async (req, res) => {
   try {
@@ -44,6 +45,7 @@ module.exports.getAppointmentsDoctor = async (req, res) => {
 
         const app = p.toObject();
         app.patientName = patient.name;
+        app.patientImg = patient.profileImg;
         delete app.doctorId;
         delete app.patientId;
 
@@ -78,6 +80,7 @@ module.exports.getAppointmentsPatient = async (req, res) => {
 
         const app = d.toObject();
         app.doctorName = doctor.name;
+        app.doctorImg = doctor.profileImg;
         delete app.doctorId;
         delete app.patientId;
 
@@ -100,131 +103,36 @@ module.exports.getAppointmentsPatient = async (req, res) => {
   }
 };
 
-module.exports.getPatient = async (req, res) => {
-  try {
-    const username = req.body.username;
-
-    const data = await Appointment.findOne({ username });
-
-    if (!data) {
-      return res.status(404).json({
-        message: "Patient not found",
-        status: false,
-      });
-    }
-
-    const patientData = data.toObject();
-
-    delete patientData.password;
-
-    res.json({
-      message: "Data Loaded Successfully!",
-      status: true,
-      data: patientData,
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: "Server Error",
-      status: false,
-      error: error.message,
-    });
-  }
-};
-
-module.exports.loginPatient = async (req, res) => {
-  try {
-    const { username, password } = req.body;
-
-    const result = await Appointment.findOne({ username, password });
-
-    if (!result) {
-      return res.json({
-        message: "Patient not found",
-        status: false,
-      });
-    }
-
-    const patientData = result.toObject();
-
-    delete patientData.password;
-
-    res.json({
-      message: "Data Loaded Successfully!",
-      status: true,
-      data: {
-        id: patientData._id,
-        username: patientData.username,
-        role: "p",
-      },
-    });
-  } catch (error) {
-    res.json({
-      message: "Server Error",
-      status: false,
-      error: error.message,
-    });
-  }
-};
-
-module.exports.getAuthenticatedPatient = async (req, res) => {
-  try {
-    const { id, username } = req.body;
-
-    const data = await Appointment.findOne({ _id: id, username });
-
-    if (!data) {
-      return res.json({
-        message: "Patient not found",
-        status: false,
-      });
-    }
-
-    const patientData = data.toObject();
-
-    delete patientData.password;
-
-    res.json({
-      message: "Data Loaded Successfully!",
-      status: true,
-      data: patientData,
-    });
-  } catch (error) {
-    res.json({
-      message: "Server Error",
-      status: false,
-      error: error.message,
-    });
-  }
-};
-
 module.exports.updateStatus = async (req, res) => {
   try {
     const { id, status } = req.body;
 
     const data = await Appointment.findOneAndUpdate({ _id: id }, { status });
 
-    if (!data) {
-      return res.json({
-        message: "Something Went Wrong",
-        status: false,
+    // if (!data) {
+    //   return res.json({
+    //     message: "Something Went Wrong",
+    //     status: false,
+    //   });
+    // }
+
+    if (data) {
+      const notification = await Notification.create({
+        recipientId: data.patientId,
+        recipientType: "patient",
+        type: "status",
+        message: `Your appointment has been ${status}.`,
       });
+
+      console.log("new Notification", notification);
     }
 
-    const patientData = data.toObject();
-
-    delete patientData.password;
-
     res.json({
-      message: "Status Updated",
-      status: true,
-      data: patientData,
+      message: "Appointment status updated successfully!",
+      data,
     });
   } catch (error) {
-    res.json({
-      message: "Server Error",
-      status: false,
-      error: error.message,
-    });
+    res.json({ error: "Failed to update appointment status." });
   }
 };
 
@@ -252,7 +160,7 @@ module.exports.checkBookedAppointments = async (req, res) => {
       data: appointments,
     });
   } catch (err) {
-    console.error("Error loading appointments:", err);
+    console.log("Error loading appointments:", err);
 
     return res.status(500).json({
       message: "Failed to get appointments!",

@@ -4,7 +4,7 @@ const hospitalSchema = mongoose.Schema({
   name: { type: String, required: true },
   // address, city, pincode, state,
   contact: { type: Number, required: true },
-  doctorId: { type: String, required: true },
+  doctorId: { type: Array },
 });
 
 const Hospital = mongoose.model("Doctor", hospitalSchema);

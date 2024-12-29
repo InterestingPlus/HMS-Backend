@@ -7,6 +7,7 @@ const patientSchema = mongoose.Schema({
   name: String,
   age: Number,
   contact: Number,
+
   profileImg: String,
 });
 

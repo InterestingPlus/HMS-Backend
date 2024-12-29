@@ -1,4 +1,6 @@
 const Doctor = require("../models/doctor.model.js");
+const Patient = require("../models/patient.model.js");
+const Review = require("../models/review.model.js");
 
 module.exports.addDoctor = async (req, res) => {
   try {
@@ -11,6 +13,7 @@ module.exports.addDoctor = async (req, res) => {
       contact,
       availability,
       profileImg,
+      consultationCharge,
     } = req.body;
 
     const result = await Doctor.create({
@@ -22,6 +25,7 @@ module.exports.addDoctor = async (req, res) => {
       contact,
       availability,
       profileImg,
+      consultationCharge,
     });
 
     console.log(
@@ -104,6 +108,28 @@ module.exports.getDoctor = async (req, res) => {
     const doctorData = data.toObject();
 
     delete doctorData.password;
+
+    const review_data = await Review.find({ doctorId: doctorData._id });
+
+    const reviewsWithPatientInfo = await Promise.all(
+      review_data.map(async (review) => {
+        const patient = await Patient.findById(review.patientId, {
+          name: 1,
+          profileImg: 1,
+        });
+
+        return {
+          rating: review.rating,
+          patientName: patient?.name || "Unknown Patient",
+          patientImg: patient?.profileImg || "",
+          title: review.title,
+          review: review.review,
+        };
+      })
+    );
+
+    // Attach reviews to the doctor data
+    doctorData.reviews = reviewsWithPatientInfo;
 
     res.json({
       message: "Data Loaded Successfully!",
