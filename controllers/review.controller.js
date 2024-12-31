@@ -2,6 +2,31 @@ const Appointment = require("../models/appointment.model.js");
 const Doctor = require("../models/doctor.model.js");
 const Review = require("../models/review.model.js");
 
+async function updateAverageRating(id, newRating) {
+  try {
+    const allRatings = await Review.find(
+      { doctorId: id },
+      { rating: 1, _id: 0 }
+    );
+
+    let avgRating;
+
+    if (allRatings.length > 0) {
+      const ratings = allRatings.map((review) => review.rating);
+      ratings.push(newRating);
+      avgRating = Math.floor(
+        ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length
+      );
+    } else {
+      avgRating = newRating;
+    }
+
+    await Doctor.findOneAndUpdate({ _id: id }, { avgRating });
+  } catch (err) {
+    console.error("Error updating Average Rating");
+  }
+}
+
 module.exports.addReview = async (req, res) => {
   const { doctorId, patientId, rating, title, review } = req.body;
 
@@ -10,6 +35,8 @@ module.exports.addReview = async (req, res) => {
 
     if (!isAlreadyAdded) {
       await Review.create({ doctorId, patientId, rating, title, review });
+
+      updateAverageRating(doctorId, rating);
 
       return res.status(200).json({
         message: "Review Added SuccessFully!",

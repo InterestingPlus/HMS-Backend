@@ -7,26 +7,39 @@ module.exports.addAppointment = async (req, res) => {
   try {
     const { doctorId, patientId, date, time, reason } = req.body;
 
-    const result = await Appointment.create({
+    const isAlreadyBooked = await Appointment.findOne({
       doctorId,
-      patientId,
       date,
       time,
-      reason,
     });
 
-    console.log(
-      `Appointment Booked = Date : ${result.date} Time : ${result.time}`
-    );
+    if (!isAlreadyBooked) {
+      const result = await Appointment.create({
+        doctorId,
+        patientId,
+        date,
+        time,
+        reason,
+      });
 
-    return res.json({
-      message: "Appointment Booked SuccessFully!",
-      status: true,
-    });
+      console.log(
+        `Appointment Booked = Date : ${result.date} Time : ${result.time}`
+      );
+
+      return res.status(200).json({
+        message: "Appointment Booked SuccessFully!",
+        status: true,
+      });
+    } else {
+      return res.status(200).json({
+        message: "Appointment has Already Booked!",
+        status: false,
+      });
+    }
   } catch (err) {
-    console.log("Error While Booking Appointment : ", err);
+    console.log("Error While Booking Appointment");
 
-    res.json({
+    res.status(500).json({
       message: "Failed to Book Appointment!",
       status: false,
     });
@@ -81,6 +94,7 @@ module.exports.getAppointmentsPatient = async (req, res) => {
         const app = d.toObject();
         app.doctorName = doctor.name;
         app.doctorImg = doctor.profileImg;
+        app.doctorGender = doctor?.gender;
         delete app.doctorId;
         delete app.patientId;
 

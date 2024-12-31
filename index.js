@@ -14,6 +14,7 @@ const {
   loginDoctor,
   getAuthenticatedDoctor,
   TopDoctors,
+  searchDoctor,
 } = require("./controllers/doctor.controller.js");
 
 const {
@@ -94,6 +95,7 @@ app.get("/", (req, res) => {
 
 // Doctor Route
 app.get("/get-doctor", getAllDoctors);
+app.post("/search-doctor", searchDoctor);
 app.get("/top-doctor", TopDoctors);
 app.post("/doctor", getDoctor);
 

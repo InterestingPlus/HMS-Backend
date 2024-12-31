@@ -9,8 +9,10 @@ module.exports.addDoctor = async (req, res) => {
       password,
       name,
       age,
+      gender,
       specialization,
       contact,
+      address,
       availability,
       profileImg,
       consultationCharge,
@@ -21,8 +23,10 @@ module.exports.addDoctor = async (req, res) => {
       password,
       name,
       age,
+      gender,
       specialization,
       contact,
+      address,
       availability,
       profileImg,
       consultationCharge,
@@ -53,19 +57,84 @@ module.exports.addDoctor = async (req, res) => {
 
 module.exports.getAllDoctors = async (req, res) => {
   try {
-    const data = await Doctor.find();
+    const { page = 1, limit = 8 } = req.query; // Default values for page and limit
+
+    const skip = (page - 1) * limit;
+
+    const doctors = await Doctor.find().skip(skip).limit(parseInt(limit, 10));
+
+    const totalDoctors = await Doctor.countDocuments();
 
     res.json({
       message: "Doctors Loaded Successfully!",
+      data: doctors,
+      currentPage: parseInt(page, 10),
+      hasMore: totalDoctors > skip + doctors.length,
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message, status: false });
+  }
+};
+
+module.exports.searchDoctor = async (req, res) => {
+  try {
+    const { search } = req.body;
+
+    const doctors = await Doctor.find({
+      name: { $regex: new RegExp(search, "i") }, // Case-insensitive regex search
+    });
+
+    if (doctors.length === 0) {
+      return res.status(404).json({
+        message: "No doctors found!",
+        status: false,
+        data: [],
+      });
+    }
+
+    res.status(200).json({
+      message: "Doctors found successfully!",
       status: true,
-      data,
+      data: doctors,
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: "An error occurred while searching for doctors!",
+      status: false,
+      error: err.message,
+    });
+  }
+};
+
+module.exports.getDoctors = async (req, res) => {
+  try {
+    const { page = 1, limit = 10 } = req.query; // Default values
+
+    // Convert query params to integers
+    const pageNumber = parseInt(page, 10);
+    const limitNumber = parseInt(limit, 10);
+
+    // Calculate skip value
+    const skip = (pageNumber - 1) * limitNumber;
+
+    // Fetch doctors with pagination
+    const doctors = await Doctor.find()
+      .skip(skip) // Skip records based on page
+      .limit(limitNumber) // Limit the number of records fetched
+      .sort({ createdAt: -1 }); // Sort by newest doctors first (optional)
+
+    // Total count for frontend (for "No More Profiles" logic)
+    const totalDoctors = await Doctor.countDocuments();
+
+    res.status(200).json({
+      message: "Doctors fetched successfully",
+      status: true,
+      data: doctors,
+      totalPages: Math.ceil(totalDoctors / limitNumber), // Total pages
+      currentPage: pageNumber,
     });
   } catch (error) {
-    res.status(500).json({
-      message: "An error occurred while fetching doctors.",
-      status: false,
-      error: error.message,
-    });
+    res.status(500).json({ message: "Error fetching doctors", error });
   }
 };
 
