@@ -1,19 +1,27 @@
 const mongoose = require("mongoose");
 
+const addressSchema = mongoose.Schema({
+  country: { type: String, required: true },
+  state: { type: String, required: true },
+  city: { type: String, required: true },
+});
+
 const doctorSchema = mongoose.Schema({
   username: { type: String, unique: true },
   password: { type: String, required: true },
 
   name: { type: String, required: true },
   age: Number,
-  gender: { type: String, enum: ["male", "female"] },
+  gender: { type: String },
   specialization: { type: String, required: true },
   contact: Number,
-  address: { type: Object },
+
+  address: { type: addressSchema, required: true },
+
   availability: { type: Array, required: true },
   consultationCharge: Number,
   profileImg: String,
-  avgRating: { type: Number },
+  avgRating: { type: Number, default: 0 },
 });
 
 const Doctor = mongoose.model("Doctor", doctorSchema);

@@ -18,6 +18,8 @@ module.exports.addDoctor = async (req, res) => {
       consultationCharge,
     } = req.body;
 
+    console.log(address);
+
     const result = await Doctor.create({
       username,
       password,
@@ -185,20 +187,23 @@ module.exports.getDoctor = async (req, res) => {
         const patient = await Patient.findById(review.patientId, {
           name: 1,
           profileImg: 1,
+          gender: 1,
+          _id: 0,
         });
 
         return {
-          rating: review.rating,
+          rating: review?.rating || 0,
           patientName: patient?.name || "Unknown Patient",
           patientImg: patient?.profileImg || "",
-          title: review.title,
-          review: review.review,
+          gender: patient?.gender || "",
+          title: review?.title || "",
+          review: review?.review || "",
         };
       })
     );
 
     // Attach reviews to the doctor data
-    doctorData.reviews = reviewsWithPatientInfo;
+    doctorData.reviews = await reviewsWithPatientInfo;
 
     res.json({
       message: "Data Loaded Successfully!",
