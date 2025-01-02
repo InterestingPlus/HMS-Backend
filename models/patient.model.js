@@ -6,19 +6,22 @@ const addressSchema = mongoose.Schema({
   city: { type: String, required: true },
 });
 
-const patientSchema = mongoose.Schema({
-  username: { type: String, unique: true },
-  password: String,
+const patientSchema = mongoose.Schema(
+  {
+    username: { type: String, unique: true },
+    password: String,
 
-  name: String,
-  age: Number,
-  contact: Number,
-  gender: String,
+    name: String,
+    age: Number,
+    contact: Number,
+    gender: String,
 
-  address: { type: addressSchema, required: true },
+    address: { type: addressSchema, required: true },
 
-  profileImg: String,
-});
+    profileImg: String,
+  },
+  { timestamps: true }
+);
 
 const Patient = mongoose.model("Patient", patientSchema);
 

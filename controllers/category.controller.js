@@ -26,7 +26,7 @@ module.exports.addCategory = async (req, res) => {
       status: true,
     });
   } catch (err) {
-    console.log("Error While Adding Category : ", err);
+    console.log("Can't Add Category!");
 
     res.status(500).json({
       message: "Failed to Add Category!",

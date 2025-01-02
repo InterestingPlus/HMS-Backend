@@ -12,7 +12,7 @@ const appointmentSchema = mongoose.Schema(
       enum: ["pending", "accepted", "rejected", "visited"],
       default: "pending",
     },
-    prescription: { type: String },
+    prescriptionId: { type: String },
   },
   { timestamps: true }
 );

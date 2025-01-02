@@ -15,12 +15,14 @@ const {
   getAuthenticatedDoctor,
   TopDoctors,
   searchDoctor,
+  updateDoctor,
 } = require("./controllers/doctor.controller.js");
 
 const {
   loginPatient,
   getAuthenticatedPatient,
   addPatient,
+  updatePatient,
 } = require("./controllers/patient.controller.js");
 const {
   addAppointment,
@@ -44,6 +46,7 @@ const {
   checkReview,
 } = require("./controllers/review.controller.js");
 const { dietSuggestions } = require("./controllers/suggestion.controller.js");
+const { addPrescription } = require("./controllers/prescription.controller.js");
 
 const app = express();
 
@@ -101,11 +104,13 @@ app.post("/doctor", getDoctor);
 
 app.post("/login-doctor", loginDoctor);
 app.post("/create-doctor", addDoctor);
+app.post("/update-doctor", updateDoctor);
 app.post("/auth-doctor", getAuthenticatedDoctor);
 
 // Patient Route
 app.post("/login-patient", loginPatient);
 app.post("/create-patient", addPatient);
+app.post("/update-patient", updatePatient);
 app.post("/auth-patient", getAuthenticatedPatient);
 
 // Appointment Route
@@ -114,6 +119,9 @@ app.post("/get-appointments-patient", getAppointmentsPatient);
 app.post("/get-appointments-doctor", getAppointmentsDoctor);
 app.post("/update-status", updateStatus);
 app.post("/check-booked-appointments", checkBookedAppointments);
+
+// Prescription Route
+app.post("/add-prescription", addPrescription);
 
 // NodeMailer Route
 app.post("/otp-verification", otpVerification);

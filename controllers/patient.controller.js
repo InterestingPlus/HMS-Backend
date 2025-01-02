@@ -28,7 +28,7 @@ module.exports.addPatient = async (req, res) => {
       `Patient Created = Name : ${result.name} UserName : ${result.username}`
     );
 
-    return res.json({
+    return res.status(200).json({
       message: "Patient Profile Created SuccessFully!",
       data: {
         id: result._id,
@@ -40,8 +40,42 @@ module.exports.addPatient = async (req, res) => {
   } catch (err) {
     console.log("Error While Creating Patient : ", err);
 
-    res.json({
+    res.status(500).json({
       message: "Failed to Create Patient!",
+      status: false,
+    });
+  }
+};
+
+module.exports.updatePatient = async (req, res) => {
+  try {
+    const { id, name, age, address, contact, profileImg } = req.body;
+
+    const result = await Patient.findOneAndUpdate(
+      { _id: id },
+      {
+        name,
+        age,
+        address,
+        contact,
+        profileImg,
+      }
+    );
+
+    console.log(
+      `Patient Updated = Name : ${result.name} UserName : ${result.username}`
+    );
+
+    return res.status(200).json({
+      message: "Patient Profile Updated SuccessFully!",
+      data: result,
+      status: true,
+    });
+  } catch (err) {
+    console.log("Error While Updating Patient!", err);
+
+    res.status(500).json({
+      message: "Failed to Update Patient!",
       status: false,
     });
   }

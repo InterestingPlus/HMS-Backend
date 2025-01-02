@@ -1,34 +1,43 @@
 const axios = require("axios");
+const Doctor = require("../models/doctor.model");
 
-function formateSuggestions(content) {
-  // Match everything inside the array brackets []
-  const arrayContentMatch = content.match(/\[\s*([\s\S]*?)\s*\];/);
+function formatSuggestions(content) {
+  try {
+    // Step 1: Locate the first opening '[' and the last closing ']'
+    const startIndex = content.indexOf("[");
+    const endIndex = content.lastIndexOf("]");
 
-  if (!arrayContentMatch) {
-    throw new Error("Array content not found in the input.");
-  }
+    if (startIndex === -1 || endIndex === -1 || endIndex <= startIndex) {
+      throw new Error("Array content not found in the input.");
+    }
 
-  const arrayContent = arrayContentMatch[1];
+    // Step 2: Extract the content between '[' and ']'
+    const arrayContent = content.substring(startIndex, endIndex + 1);
 
-  // Match all objects inside the array
-  const objectMatches = arrayContent.match(/\{\s*[\s\S]*?\s*\}/g);
+    // Step 3: Parse the extracted content as JSON
+    const parsedArray = JSON.parse(arrayContent);
 
-  if (!objectMatches) {
+    // Ensure it's an array and contains objects with 'suggestion' keys
+    if (
+      Array.isArray(parsedArray) &&
+      parsedArray.every((item) => "suggestion" in item)
+    ) {
+      return parsedArray;
+    }
+
+    throw new Error("Parsed content is not in the expected format.");
+  } catch (error) {
+    console.error("Failed to format suggestions:", error.message);
     return [];
   }
-
-  // Parse each object and convert it into JavaScript objects
-  return objectMatches.map((objectString) => {
-    // Replace newlines and extra spaces for cleaner parsing
-    const cleanedObjectString = objectString.replace(/\n\s*/g, " ").trim();
-
-    // Use Function constructor to parse the object safely
-    return Function('"use strict"; return (' + cleanedObjectString + ")")();
-  });
 }
 
 module.exports.dietSuggestions = async (req, res) => {
   try {
+    const { doctorId, reason } = req.body;
+
+    const { specialization, name } = await Doctor.findOne({ _id: doctorId });
+
     const data = await axios.post(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
       {
@@ -36,7 +45,7 @@ module.exports.dietSuggestions = async (req, res) => {
           {
             parts: [
               {
-                text: `give me the formatted javascript array that contains some diet/health suggestions, where each element contains the diet suggestion to the diabetes patient with simple English Words. 
+                text: `give me the formatted javascript array that contains some diet/health suggestions for patient with Reason : '${reason}', where each element contains the diet suggestion to the patient with simple English Words as you are the Doctor Specialized with ${specialization}, nammed '${name}'.
                 
                 the output as array with 'suggestion' property to object in each element.`,
               },
@@ -49,7 +58,9 @@ module.exports.dietSuggestions = async (req, res) => {
     if (data) {
       const row_input = data.data.candidates[0].content.parts[0].text;
 
-      const formatted_output = formateSuggestions(row_input);
+      console.log("Gemini Row", row_input);
+
+      const formatted_output = formatSuggestions(row_input);
 
       console.log("Gemini Responce", formatted_output);
 

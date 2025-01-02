@@ -61,7 +61,6 @@ module.exports.getAppointmentsDoctor = async (req, res) => {
         app.patientImg = patient.profileImg;
         app.gender = patient?.gender;
         delete app.doctorId;
-        delete app.patientId;
 
         return app;
       })
@@ -138,15 +137,17 @@ module.exports.updateStatus = async (req, res) => {
         type: "status",
         message: `Your appointment has been ${status}.`,
       });
-
-      console.log("new Notification", notification);
     }
+
+    console.log("Appointment Status Updated!");
 
     res.json({
       message: "Appointment status updated successfully!",
       data,
     });
   } catch (error) {
+    console.log("Can't Update Status!");
+
     res.json({ error: "Failed to update appointment status." });
   }
 };
