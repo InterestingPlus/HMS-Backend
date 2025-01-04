@@ -10,6 +10,8 @@ const notificationSchema = new mongoose.Schema(
     }, // Who the notification is for
     type: { type: String, required: true },
     message: { type: String, required: true },
+    senderId: { type: String },
+
     isRead: { type: Boolean, default: false },
   },
   { timestamps: true }

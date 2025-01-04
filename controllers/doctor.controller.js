@@ -82,7 +82,7 @@ module.exports.updateDoctor = async (req, res) => {
       status: true,
     });
   } catch (err) {
-    console.log("Error While Updating Doctor!", err);
+    console.log("Error While Updating Doctor!");
 
     res.status(500).json({
       message: "Failed to Update Doctor!",

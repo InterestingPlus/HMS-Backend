@@ -11,8 +11,6 @@ module.exports.addPrescription = async (req, res) => {
       link,
     });
 
-    console.log(PrescriptionData);
-
     const data = await Appointment.findOneAndUpdate(
       { _id: appId },
       { prescriptionId: PrescriptionData._id }

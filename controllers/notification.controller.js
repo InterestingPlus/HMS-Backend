@@ -20,7 +20,7 @@ getAllNotifications = async (req, res) => {
       data: notifications,
     });
   } catch (error) {
-    console.log("Error fetching notifications:", error);
+    console.log("Error fetching notifications!");
 
     return res.status(500).json({
       message: "An error occurred while fetching notifications.",
@@ -40,7 +40,7 @@ deleteNotification = async (req, res) => {
       status: true,
     });
   } catch (error) {
-    console.log("Error deleting notifications:", error);
+    console.log("Error deleting notifications!");
 
     return res.status(500).json({
       message: "An error occurred while deleting notifications.",

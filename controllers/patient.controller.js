@@ -38,7 +38,7 @@ module.exports.addPatient = async (req, res) => {
       status: true,
     });
   } catch (err) {
-    console.log("Error While Creating Patient : ", err);
+    console.log("Error While Creating Patient!");
 
     res.status(500).json({
       message: "Failed to Create Patient!",
@@ -72,7 +72,7 @@ module.exports.updatePatient = async (req, res) => {
       status: true,
     });
   } catch (err) {
-    console.log("Error While Updating Patient!", err);
+    console.log("Error While Updating Patient!");
 
     res.status(500).json({
       message: "Failed to Update Patient!",

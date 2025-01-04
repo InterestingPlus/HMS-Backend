@@ -69,8 +69,14 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
   // console.log("New client connected:", socket.id);
 
-  socket.on("status", (data) => {
-    io.emit("new-notification", data);
+  socket.on("patient", (data) => {
+    io.emit("new-notification-patient", data);
+    console.log(data);
+  });
+
+  socket.on("doctor", (data) => {
+    io.emit("new-notification-doctor", data);
+    console.log(data);
   });
 });
 module.exports = { io };

@@ -58,21 +58,21 @@ module.exports.dietSuggestions = async (req, res) => {
     if (data) {
       const row_input = data.data.candidates[0].content.parts[0].text;
 
-      console.log("Gemini Row", row_input);
+      // console.log("Gemini Row", row_input);
 
       const formatted_output = formatSuggestions(row_input);
 
-      console.log("Gemini Responce", formatted_output);
+      // console.log("Gemini Responce", formatted_output);
 
       res.status(200).json({
         message: "We are Successfull on Generating the Suggestions.",
         data: formatted_output,
       });
     } else {
-      console.log("Gemini Responce", data);
+      console.log("Gemini API Currently under Issue!");
     }
   } catch (err) {
-    console.log("Gemini Responce", err);
+    console.log("Gemini API Currently under Issue!");
     res.status(500).json({
       message: "We are Fixing the Issue! Try Again Later...",
     });
