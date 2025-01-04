@@ -9,6 +9,7 @@ module.exports.addDoctor = async (req, res) => {
       password,
       name,
       age,
+      about,
       gender,
       specialization,
       contact,
@@ -23,6 +24,7 @@ module.exports.addDoctor = async (req, res) => {
       password,
       name,
       age,
+      about,
       gender,
       specialization,
       contact,
@@ -57,7 +59,7 @@ module.exports.addDoctor = async (req, res) => {
 
 module.exports.updateDoctor = async (req, res) => {
   try {
-    const { id, name, age, address, contact, profileImg, availability } =
+    const { id, name, age, about, address, contact, profileImg, availability } =
       req.body;
 
     const result = await Doctor.findOneAndUpdate(
@@ -65,6 +67,7 @@ module.exports.updateDoctor = async (req, res) => {
       {
         name,
         age,
+        about,
         address,
         contact,
         profileImg,
@@ -199,9 +202,15 @@ module.exports.TopDoctors = async (req, res) => {
 
 module.exports.getDoctor = async (req, res) => {
   try {
-    const username = req.body.username;
+    let username = req.body?.username;
 
-    const data = await Doctor.findOne({ username });
+    let data;
+
+    if (!username) {
+      data = await Doctor.findOne({ _id: req.body.id });
+    } else {
+      data = await Doctor.findOne({ username });
+    }
 
     if (!data) {
       return res.status(404).json({
@@ -212,7 +221,7 @@ module.exports.getDoctor = async (req, res) => {
 
     const doctorData = data.toObject();
 
-    delete doctorData.password;
+    delete doctorData?.password;
 
     const review_data = await Review.find({ doctorId: doctorData._id });
 

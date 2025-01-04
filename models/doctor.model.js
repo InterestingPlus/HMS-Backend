@@ -21,7 +21,7 @@ const doctorSchema = mongoose.Schema(
     address: { type: addressSchema, required: true },
 
     availability: { type: Array, required: true },
-    consultationCharge: Number,
+    consultationCharge: { type: Number, default: 100 },
     profileImg: String,
     avgRating: { type: Number, default: 0 },
   },

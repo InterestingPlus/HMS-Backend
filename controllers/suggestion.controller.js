@@ -45,7 +45,7 @@ module.exports.dietSuggestions = async (req, res) => {
           {
             parts: [
               {
-                text: `give me the formatted javascript array that contains some diet/health suggestions for patient with Reason : '${reason}', where each element contains the diet suggestion to the patient with simple English Words as you are the Doctor Specialized with ${specialization}, nammed '${name}'.
+                text: `give me the formatted javascript array that contains some diet/health suggestions for patient with Reason : '${reason}', where each element contains the diet suggestion to the patient with simple English Words as you are the Doctor Specialized with ${specialization}, named '${name}'.
                 
                 the output as array with 'suggestion' property to object in each element.`,
               },

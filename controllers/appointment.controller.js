@@ -136,8 +136,8 @@ module.exports.getAppointmentsPatient = async (req, res) => {
         const doctor = await Doctor.findOne({ _id: d.doctorId });
 
         const app = d.toObject();
-        app.doctorName = doctor.name;
-        app.doctorImg = doctor.profileImg;
+        app.doctorName = doctor?.name;
+        app.doctorImg = doctor?.profileImg;
         app.doctorGender = doctor?.gender;
         delete app.doctorId;
         delete app.patientId;
@@ -152,7 +152,7 @@ module.exports.getAppointmentsPatient = async (req, res) => {
       data: data1,
     });
   } catch (err) {
-    console.log("Error While Loading Appointments!");
+    console.log("Error While Loading Appointments!", err);
 
     res.json({
       message: "Failed to Get Appointments!",
