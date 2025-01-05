@@ -16,6 +16,7 @@ const {
   TopDoctors,
   searchDoctor,
   updateDoctor,
+  doctorHistory,
 } = require("./controllers/doctor.controller.js");
 
 const {
@@ -23,6 +24,7 @@ const {
   getAuthenticatedPatient,
   addPatient,
   updatePatient,
+  patientHistory,
 } = require("./controllers/patient.controller.js");
 const {
   addAppointment,
@@ -46,7 +48,16 @@ const {
   checkReview,
 } = require("./controllers/review.controller.js");
 const { dietSuggestions } = require("./controllers/suggestion.controller.js");
-const { addPrescription } = require("./controllers/prescription.controller.js");
+const {
+  addPrescription,
+  viewPrescription,
+} = require("./controllers/prescription.controller.js");
+const {
+  getAllHospitals,
+  searchHospital,
+  getHospital,
+  TopHospitals,
+} = require("./controllers/hospital.controller.js");
 
 const app = express();
 
@@ -107,6 +118,7 @@ app.get("/get-doctor", getAllDoctors);
 app.post("/search-doctor", searchDoctor);
 app.get("/top-doctor", TopDoctors);
 app.post("/doctor", getDoctor);
+app.post("/doctor-history", doctorHistory);
 
 app.post("/login-doctor", loginDoctor);
 app.post("/create-doctor", addDoctor);
@@ -118,6 +130,13 @@ app.post("/login-patient", loginPatient);
 app.post("/create-patient", addPatient);
 app.post("/update-patient", updatePatient);
 app.post("/auth-patient", getAuthenticatedPatient);
+app.post("/patient-history", patientHistory);
+
+// Hospital Route
+app.get("/get-hospitals", getAllHospitals);
+app.post("/search-hospital", searchHospital);
+app.post("/hospital", getHospital);
+app.get("/top-hospitals", TopHospitals);
 
 // Appointment Route
 app.post("/create-appointment", addAppointment);
@@ -128,6 +147,7 @@ app.post("/check-booked-appointments", checkBookedAppointments);
 
 // Prescription Route
 app.post("/add-prescription", addPrescription);
+app.post("/view-prescription", viewPrescription);
 
 // NodeMailer Route
 app.post("/otp-verification", otpVerification);

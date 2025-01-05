@@ -29,3 +29,24 @@ module.exports.addPrescription = async (req, res) => {
     });
   }
 };
+
+module.exports.viewPrescription = async (req, res) => {
+  const { id } = req.body;
+
+  try {
+    const PrescriptionData = await Prescription.findOne({ _id: id });
+
+    res.status(200).json({
+      status: true,
+      data: PrescriptionData,
+      message: "Prescription Loaded!",
+    });
+  } catch (err) {
+    console.log("Can't Load Prescription!");
+
+    res.status(500).json({
+      status: false,
+      message: "Can't Load Prescription",
+    });
+  }
+};

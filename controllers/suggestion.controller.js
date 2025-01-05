@@ -45,7 +45,7 @@ module.exports.dietSuggestions = async (req, res) => {
           {
             parts: [
               {
-                text: `give me the formatted javascript array that contains some diet/health suggestions for patient with Reason : '${reason}', where each element contains the diet suggestion to the patient with simple English Words as you are the Doctor Specialized with ${specialization}, named '${name}'.
+                text: `give me the formatted javascript array that contains some diet/health/medicine suggestions for patient with Reason : '${reason}', where each element contains the diet suggestion to the patient with simple English Words as you are the Doctor Specialized with ${specialization}, named '${name}'.
                 
                 the output as array with 'suggestion' property to object in each element.`,
               },
@@ -58,7 +58,7 @@ module.exports.dietSuggestions = async (req, res) => {
     if (data) {
       const row_input = data.data.candidates[0].content.parts[0].text;
 
-      // console.log("Gemini Row", row_input);
+      console.log("Gemini Row", row_input);
 
       const formatted_output = formatSuggestions(row_input);
 

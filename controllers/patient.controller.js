@@ -1,3 +1,5 @@
+const Appointment = require("../models/appointment.model.js");
+const Doctor = require("../models/doctor.model.js");
 const Patient = require("../models/patient.model.js");
 
 module.exports.addPatient = async (req, res) => {
@@ -183,6 +185,37 @@ module.exports.getAuthenticatedPatient = async (req, res) => {
     res.json({
       message: "Server Error",
       status: false,
+      error: error.message,
+    });
+  }
+};
+
+module.exports.patientHistory = async (req, res) => {
+  try {
+    const id = req.body.id;
+
+    // Fetch all appointments for the given patientId
+    const appHistory = await Appointment.find({
+      patientId: id,
+      status: "visited",
+    });
+
+    // Extract unique doctorIds from appointments
+    const doctorIds = [...new Set(appHistory.map((app) => app.doctorId))];
+
+    // Fetch patient details for the collected doctorIds
+    const doctors = await Doctor.find({ _id: { $in: doctorIds } });
+
+    res.status(200).json({
+      success: true,
+      message: "Patient history retrieved successfully.",
+      data: doctors,
+    });
+  } catch (error) {
+    console.error("Error fetching patient history:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to retrieve patient history.",
       error: error.message,
     });
   }

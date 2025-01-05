@@ -1,3 +1,4 @@
+const Appointment = require("../models/appointment.model.js");
 const Doctor = require("../models/doctor.model.js");
 const Patient = require("../models/patient.model.js");
 const Review = require("../models/review.model.js");
@@ -142,38 +143,6 @@ module.exports.searchDoctor = async (req, res) => {
       status: false,
       error: err.message,
     });
-  }
-};
-
-module.exports.getDoctors = async (req, res) => {
-  try {
-    const { page = 1, limit = 10 } = req.query; // Default values
-
-    // Convert query params to integers
-    const pageNumber = parseInt(page, 10);
-    const limitNumber = parseInt(limit, 10);
-
-    // Calculate skip value
-    const skip = (pageNumber - 1) * limitNumber;
-
-    // Fetch doctors with pagination
-    const doctors = await Doctor.find()
-      .skip(skip) // Skip records based on page
-      .limit(limitNumber) // Limit the number of records fetched
-      .sort({ createdAt: -1 }); // Sort by newest doctors first (optional)
-
-    // Total count for frontend (for "No More Profiles" logic)
-    const totalDoctors = await Doctor.countDocuments();
-
-    res.status(200).json({
-      message: "Doctors fetched successfully",
-      status: true,
-      data: doctors,
-      totalPages: Math.ceil(totalDoctors / limitNumber), // Total pages
-      currentPage: pageNumber,
-    });
-  } catch (error) {
-    res.status(500).json({ message: "Error fetching doctors", error });
   }
 };
 
@@ -323,6 +292,37 @@ module.exports.getAuthenticatedDoctor = async (req, res) => {
     res.json({
       message: "Server Error",
       status: false,
+      error: error.message,
+    });
+  }
+};
+
+module.exports.doctorHistory = async (req, res) => {
+  try {
+    const id = req.body.id;
+
+    // Fetch all appointments for the given doctorId
+    const appHistory = await Appointment.find({
+      doctorId: id,
+      status: "visited",
+    });
+
+    // Extract unique doctorIds from appointments
+    const patientIds = [...new Set(appHistory.map((app) => app.patientId))];
+
+    // Fetch patient details for the collected patientIds
+    const patients = await Patient.find({ _id: { $in: patientIds } });
+
+    res.status(200).json({
+      success: true,
+      message: "Doctor history retrieved successfully.",
+      data: patients,
+    });
+  } catch (error) {
+    console.error("Error fetching doctor history:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to retrieve doctor history.",
       error: error.message,
     });
   }
