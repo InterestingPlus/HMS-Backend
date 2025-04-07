@@ -58,6 +58,8 @@ const {
   getHospital,
   TopHospitals,
 } = require("./controllers/hospital.controller.js");
+const { insertDoctors } = require("./entry/doctor.js");
+const job = require("./cron.js");
 
 const app = express();
 
@@ -107,6 +109,8 @@ mongoose
   .catch((error) => {
     console.error("Error connecting to MongoDB : ", error);
   });
+
+job.start();
 
 // Routes
 app.get("/", (req, res) => {
