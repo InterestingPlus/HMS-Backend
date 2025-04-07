@@ -148,53 +148,26 @@ module.exports.searchDoctor = async (req, res) => {
 
 module.exports.TopDoctors = async (req, res) => {
   try {
-    // Aggregate reviews to calculate number of ratings and average rating for each doctor
-    const aggregatedData = await Review.aggregate([
-      {
-        $group: {
-          _id: "$doctorId", // Group by doctorId
-          numRatings: { $sum: 1 }, // Count the number of ratings
-          avgRating: { $avg: "$rating" }, // Calculate the average rating
-        },
-      },
-      {
-        $sort: { avgRating: -1, numRatings: -1 }, // Sort by avgRating (desc) and then by numRatings (desc)
-      },
-      {
-        $limit: 4, // Limit the result to top 4 doctors
-      },
-    ]);
+    // const data = await Doctor.find().limit(6).lean();
+    const data = await Doctor.find().sort({ avgRating: -1 }).limit(4);
 
-    // Fetch doctor details for the aggregated data
-    const topDoctors = await Doctor.find({
-      _id: { $in: aggregatedData.map((d) => d._id) },
-    }).lean();
-
-    // Combine doctor details with the aggregated data
-    const result = topDoctors.map((doctor) => {
-      const aggData = aggregatedData.find((d) => d._id.toString() === doctor._id.toString());
-      return {
-        ...doctor,
-        avgRating: aggData.avgRating,
-        numRatings: aggData.numRatings,
-      };
+    data.forEach((doctor) => {
+      delete doctor.password;
     });
 
-    // Respond with the top doctors
     res.json({
       message: "Top Doctors Loaded Successfully!",
       status: true,
-      data: result,
+      data: data,
     });
   } catch (error) {
     res.status(500).json({
-      message: "An error occurred while fetching top doctors.",
+      message: "An error occurred while fetching doctors.",
       status: false,
       error: error.message,
     });
   }
 };
-
 
 module.exports.getDoctor = async (req, res) => {
   try {
